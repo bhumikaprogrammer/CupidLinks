@@ -207,3 +207,5 @@ VALUES (
     'admin',
     'approved'
 );
+
+ALTER TABLE profiles ADD COLUMN clan VARCHAR(100) NULL AFTER nepali_raasi;
