@@ -37,18 +37,35 @@ public class ReportServlet extends HttpServlet {
 
         String reportedUserIdStr = ValidationUtil.sanitize(request.getParameter("reportedUserId"));
         String reason            = ValidationUtil.sanitize(request.getParameter("reason"));
+        String source            = ValidationUtil.sanitize(request.getParameter("source"));
 
         if (ValidationUtil.isEmpty(reason) || ValidationUtil.isEmpty(reportedUserIdStr)) {
-            response.sendRedirect(request.getContextPath() + "/discover?error=true");
+            response.sendRedirect(buildRedirectUrl(request, source, false));
             return;
         }
 
         try {
             int reportedUserId = Integer.parseInt(reportedUserIdStr);
             reportService.submitReport(reporterId, reportedUserId, reason);
-            response.sendRedirect(request.getContextPath() + "/discover?reported=true");
+            response.sendRedirect(buildRedirectUrl(request, source, true));
         } catch (SQLException | NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/discover?error=true");
+            response.sendRedirect(buildRedirectUrl(request, source, false));
         }
+    }
+
+    /**
+     * Returns the user to the page where the report was submitted.
+     *
+     * @param request current HTTP request
+     * @param source source page submitted by the report form
+     * @param success true when the report was saved
+     * @return safe application-local redirect URL
+     */
+    private String buildRedirectUrl(HttpServletRequest request, String source, boolean success) {
+        String status = success ? "reported=true" : "error=true";
+        if ("matches".equals(source)) {
+            return request.getContextPath() + "/matches?" + status;
+        }
+        return request.getContextPath() + "/discover?" + status;
     }
 }

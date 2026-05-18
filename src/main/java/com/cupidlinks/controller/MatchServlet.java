@@ -1,9 +1,6 @@
 package com.cupidlinks.controller;
 
-import com.cupidlinks.dao.MatchDAO;
-import com.cupidlinks.dao.ProfileDAO;
-import com.cupidlinks.model.Match;
-import com.cupidlinks.model.Profile;
+import com.cupidlinks.service.MatchService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,10 +10,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Controller for showing the logged-in user's matches.
@@ -24,8 +17,7 @@ import java.util.Map;
 @WebServlet("/matches")
 public class MatchServlet extends HttpServlet {
 
-    private final MatchDAO   matchDAO   = new MatchDAO();
-    private final ProfileDAO profileDAO = new ProfileDAO();
+    private final MatchService matchService = new MatchService();
 
     /**
      * Loads match records and the other user's profile for each match.
@@ -43,21 +35,7 @@ public class MatchServlet extends HttpServlet {
         int userId = (int) session.getAttribute("userId");
 
         try {
-            List<Match> matches = matchDAO.findByUserId(userId);
-
-            // for each match load the other person's profile
-            List<Map<String, Object>> matchData = new ArrayList<>();
-            for (Match match : matches) {
-                int otherUserId = (match.getUser1Id() == userId) ? match.getUser2Id() : match.getUser1Id();
-                Profile otherProfile = profileDAO.findByUserId(otherUserId);
-
-                Map<String, Object> entry = new HashMap<>();
-                entry.put("match", match);
-                entry.put("profile", otherProfile);
-                matchData.add(entry);
-            }
-
-            request.setAttribute("matchData", matchData);
+            request.setAttribute("matchData", matchService.getMatchDataForUser(userId));
             request.getRequestDispatcher("/WEB-INF/views/user/matches.jsp").forward(request, response);
 
         } catch (SQLException e) {
