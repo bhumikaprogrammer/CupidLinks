@@ -5,11 +5,18 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
-// this listener runs when the app starts up and shuts down
-// we use it to store a site-wide visit counter in the application scope
+/**
+ * Application listener that runs when CupidLinks starts and stops.
+ * It initializes shared application-scope values such as the site visit counter.
+ */
 @WebListener
 public class AppContextListener implements ServletContextListener {
 
+    /**
+     * Initializes application-wide attributes when the web application starts.
+     *
+     * @param event servlet context event provided by the container
+     */
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
@@ -18,6 +25,11 @@ public class AppContextListener implements ServletContextListener {
         System.out.println("CupidLinks application started.");
     }
 
+    /**
+     * Runs cleanup or shutdown logging when the web application stops.
+     *
+     * @param event servlet context event provided by the container
+     */
     @Override
     public void contextDestroyed(ServletContextEvent event) {
         System.out.println("CupidLinks application stopped.");

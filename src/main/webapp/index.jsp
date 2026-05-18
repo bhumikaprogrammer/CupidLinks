@@ -52,6 +52,8 @@
         <span>CupidLinks</span>
     </div>
     <div class="nav-actions">
+        <a href="${pageContext.request.contextPath}/about" class="nav-about">About</a>
+        <a href="${pageContext.request.contextPath}/contact" class="nav-about">Contact</a>
         <a href="${pageContext.request.contextPath}/login" class="btn-login">Sign In</a>
         <a href="${pageContext.request.contextPath}/register" class="btn-register">Get Started</a>
     </div>
@@ -63,9 +65,10 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
+    <a href="${pageContext.request.contextPath}/about">About</a>
+    <a href="${pageContext.request.contextPath}/contact">Contact</a>
     <a href="${pageContext.request.contextPath}/login">Sign In</a>
     <a href="${pageContext.request.contextPath}/register">Create Account</a>
-    <a href="${pageContext.request.contextPath}/about">About</a>
 </div>
 
 <section class="hero">

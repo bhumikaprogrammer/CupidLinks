@@ -12,7 +12,7 @@ import java.io.IOException;
  * Protects normal user pages from being opened without login.
  * If there is no active session, the user is redirected to the login page.
  */
-@WebFilter(urlPatterns = {"/discover", "/profile", "/matches", "/favourites", "/interest", "/report", "/feedback", "/support", "/about", "/contact"})
+@WebFilter(urlPatterns = {"/discover", "/profile", "/matches", "/messages", "/favourites", "/interest", "/report", "/feedback", "/support"})
 public class AuthFilter implements Filter {
 
     /**
