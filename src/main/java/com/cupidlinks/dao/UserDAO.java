@@ -5,7 +5,9 @@ import com.cupidlinks.util.DBConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data access class for the users table.
@@ -189,6 +191,22 @@ public class UserDAO {
             if (rs.next()) return rs.getInt(1);
         }
         return 0;
+    }
+
+    public List<Map<String, Object>> countRegistrationsByMonth() throws SQLException {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        String sql = "SELECT DATE_FORMAT(created_at, '%Y-%m') AS month_label, COUNT(*) AS total FROM users WHERE role = 'user' GROUP BY month_label ORDER BY month_label";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("month", rs.getString("month_label"));
+                row.put("total", rs.getInt("total"));
+                rows.add(row);
+            }
+        }
+        return rows;
     }
 
     /**

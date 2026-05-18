@@ -1,6 +1,8 @@
 package com.cupidlinks.controller;
 
-import com.cupidlinks.util.DBConnection;
+import com.cupidlinks.model.SupportTicket;
+import com.cupidlinks.service.SupportService;
+import com.cupidlinks.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,35 +10,30 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Controller for admin support ticket management.
+ */
 @WebServlet("/admin/support")
 public class AdminSupportServlet extends HttpServlet {
 
+    private final SupportService supportService = new SupportService();
+
+    /**
+     * Loads all support tickets for the admin support page.
+     *
+     * @param request HTTP request from the browser
+     * @param response HTTP response used to forward to the support JSP
+     * @throws ServletException if forwarding to the JSP fails
+     * @throws IOException if the response cannot be written
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            List<Map<String, String>> tickets = new ArrayList<>();
-            String sql = "SELECT * FROM support_tickets ORDER BY submitted_at DESC";
-            try (Connection conn = DBConnection.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql);
-                 ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Map<String, String> ticket = new HashMap<>();
-                    ticket.put("ticketId", String.valueOf(rs.getInt("ticket_id")));
-                    ticket.put("userId", String.valueOf(rs.getInt("user_id")));
-                    ticket.put("subject", rs.getString("subject"));
-                    ticket.put("message", rs.getString("message"));
-                    ticket.put("status", rs.getString("status"));
-                    ticket.put("submittedAt", rs.getString("submitted_at"));
-                    tickets.add(ticket);
-                }
-            }
+            List<SupportTicket> tickets = supportService.getAllTickets();
             request.setAttribute("tickets", tickets);
             request.getRequestDispatcher("/WEB-INF/views/admin/support.jsp").forward(request, response);
         } catch (SQLException e) {
@@ -45,21 +42,23 @@ public class AdminSupportServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Updates the status of a support ticket.
+     *
+     * @param request HTTP request containing ticketId and status values
+     * @param response HTTP response used to redirect back to the support page
+     * @throws ServletException if the servlet container cannot process the request
+     * @throws IOException if redirecting fails
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String ticketId = request.getParameter("ticketId");
-        String status   = request.getParameter("status");
+        String ticketId = ValidationUtil.sanitize(request.getParameter("ticketId"));
+        String status   = ValidationUtil.sanitize(request.getParameter("status"));
         try {
-            String sql = "UPDATE support_tickets SET status = ? WHERE ticket_id = ?";
-            try (Connection conn = DBConnection.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, status);
-                stmt.setInt(2, Integer.parseInt(ticketId));
-                stmt.executeUpdate();
-            }
+            supportService.updateTicketStatus(Integer.parseInt(ticketId), status);
             response.sendRedirect(request.getContextPath() + "/admin/support?success=true");
-        } catch (SQLException e) {
+        } catch (SQLException | NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/admin/support?error=true");
         }
     }

@@ -1,6 +1,7 @@
 package com.cupidlinks.controller;
 
 import com.cupidlinks.model.Profile;
+import com.cupidlinks.service.CompatibilityService;
 import com.cupidlinks.service.ProfileService;
 import com.cupidlinks.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,7 @@ import java.util.List;
 public class DiscoverServlet extends HttpServlet {
 
     private final ProfileService profileService = new ProfileService();
+    private final CompatibilityService compatibilityService = new CompatibilityService();
 
     /**
      * Loads public profiles using optional gender, location, raasi, and sort filters.
@@ -44,6 +46,9 @@ public class DiscoverServlet extends HttpServlet {
 
         try {
             List<Profile> profiles = profileService.discoverProfiles(currentUserId, gender, location, raasi, sort);
+            for (Profile profile : profiles) {
+                profile.setCompatibilityScore(compatibilityService.calculateScore(currentUserId, profile.getUserId()));
+            }
 
             request.setAttribute("profiles", profiles);
             request.setAttribute("gender", gender);

@@ -39,7 +39,7 @@
                 <div class="profile-avatar">
                     <c:choose>
                         <c:when test="${not empty profile.profilePhoto}">
-                            <img src="${pageContext.request.contextPath}/uploads/<c:out value='${profile.profilePhoto}'/>" alt="Profile Photo">
+                            <img src="${pageContext.request.contextPath}/uploads/${profile.profilePhoto}" alt="Profile Photo">
                         </c:when>
                         <c:otherwise>
                             <div class="avatar-placeholder">${profile.fullName.substring(0,1)}</div>

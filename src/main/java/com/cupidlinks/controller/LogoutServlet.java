@@ -10,9 +10,20 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/**
+ * Controller for ending a user's logged-in session.
+ */
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
 
+    /**
+     * Invalidates the current session, clears the remember-me cookie, and redirects to login.
+     *
+     * @param request HTTP request containing the current session
+     * @param response HTTP response used to redirect to the login page
+     * @throws ServletException if the servlet container cannot process the request
+     * @throws IOException if redirecting fails
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

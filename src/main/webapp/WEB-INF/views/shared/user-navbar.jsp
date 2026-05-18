@@ -9,8 +9,9 @@
         <a href="${pageContext.request.contextPath}/discover" class="${activePage eq 'discover' ? 'active' : ''}">Discover</a>
         <a href="${pageContext.request.contextPath}/profile" class="${activePage eq 'profile' ? 'active' : ''}">My Profile</a>
         <a href="${pageContext.request.contextPath}/matches" class="${activePage eq 'matches' ? 'active' : ''}">Matches</a>
+        <a href="${pageContext.request.contextPath}/messages" class="${activePage eq 'messages' ? 'active' : ''}">Messages</a>
         <a href="${pageContext.request.contextPath}/favourites" class="${activePage eq 'favourites' ? 'active' : ''}">Favourites</a>
-        <a href="${pageContext.request.contextPath}/about" class="${activePage eq 'about' ? 'active' : ''}">About</a>
+        <a href="${pageContext.request.contextPath}/feedback" class="${activePage eq 'feedback' ? 'active' : ''}">Feedback</a>
         <a href="${pageContext.request.contextPath}/contact" class="${activePage eq 'contact' ? 'active' : ''}">Contact</a>
         <a href="${pageContext.request.contextPath}/logout">Logout</a>
     </div>
@@ -24,8 +25,9 @@
     <a href="${pageContext.request.contextPath}/discover" class="${activePage eq 'discover' ? 'active' : ''}">Discover</a>
     <a href="${pageContext.request.contextPath}/profile" class="${activePage eq 'profile' ? 'active' : ''}">My Profile</a>
     <a href="${pageContext.request.contextPath}/matches" class="${activePage eq 'matches' ? 'active' : ''}">Matches</a>
+    <a href="${pageContext.request.contextPath}/messages" class="${activePage eq 'messages' ? 'active' : ''}">Messages</a>
     <a href="${pageContext.request.contextPath}/favourites" class="${activePage eq 'favourites' ? 'active' : ''}">Favourites</a>
-    <a href="${pageContext.request.contextPath}/about" class="${activePage eq 'about' ? 'active' : ''}">About</a>
+    <a href="${pageContext.request.contextPath}/feedback" class="${activePage eq 'feedback' ? 'active' : ''}">Feedback</a>
     <a href="${pageContext.request.contextPath}/contact" class="${activePage eq 'contact' ? 'active' : ''}">Contact</a>
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </div>

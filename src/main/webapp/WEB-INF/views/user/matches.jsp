@@ -32,6 +32,12 @@
     <c:if test="${param.newMatch eq 'true'}">
         <div class="alert alert-success">You have a new match!</div>
     </c:if>
+    <c:if test="${param.reported eq 'true'}">
+        <div class="alert alert-success">Report submitted. Our team will review it.</div>
+    </c:if>
+    <c:if test="${param.error eq 'true'}">
+        <div class="alert alert-error">Something went wrong. Please try again.</div>
+    </c:if>
     <c:if test="${not empty error}">
         <div class="alert alert-error"><c:out value="${error}"/></div>
     </c:if>
@@ -45,7 +51,7 @@
                         <div class="profile-avatar">
                             <c:choose>
                                 <c:when test="${not empty profile.profilePhoto}">
-                                    <img src="${pageContext.request.contextPath}/uploads/<c:out value='${profile.profilePhoto}'/>" alt="Profile Photo">
+                                    <img src="${pageContext.request.contextPath}/uploads/${profile.profilePhoto}" alt="Profile Photo">
                                 </c:when>
                                 <c:otherwise>
                                     <c:choose>
@@ -85,7 +91,16 @@
                                     <p class="profile-bio">This user has not set up their profile yet.</p>
                                 </c:otherwise>
                             </c:choose>
-                            <div class="match-tag">Matched</div>
+                            <div class="match-actions">
+                                <div class="match-tag">Matched</div>
+                                <a class="btn-message" href="${pageContext.request.contextPath}/messages?matchId=${entry.match.matchId}">Message</a>
+                            </div>
+                            <form action="${pageContext.request.contextPath}/report" method="post" class="report-inline">
+                                <input type="hidden" name="reportedUserId" value="${entry.otherUserId}">
+                                <input type="hidden" name="source" value="matches">
+                                <input type="text" name="reason" placeholder="Report this match" required>
+                                <button type="submit">Report</button>
+                            </form>
                         </div>
                     </div>
                 </c:forEach>

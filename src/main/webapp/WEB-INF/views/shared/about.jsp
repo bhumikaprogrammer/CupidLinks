@@ -14,12 +14,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - CupidLinks</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/about.css?v=2">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/landing.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/about.css?v=6">
 </head>
-<body>
+<body class="public-info-page">
 
-<c:set var="activePage" value="about" scope="request"/>
-<jsp:include page="/WEB-INF/views/shared/user-navbar.jsp"/>
+<nav class="landing-nav">
+    <a href="${pageContext.request.contextPath}/" class="nav-brand">
+        <div class="heart-small"></div>
+        <span>CupidLinks</span>
+    </a>
+    <div class="nav-actions">
+        <a href="${pageContext.request.contextPath}/" class="nav-about">Home</a>
+        <a href="${pageContext.request.contextPath}/about" class="nav-about">About</a>
+        <a href="${pageContext.request.contextPath}/contact" class="nav-about">Contact</a>
+        <a href="${pageContext.request.contextPath}/login" class="btn-login">Sign In</a>
+        <a href="${pageContext.request.contextPath}/register" class="btn-register">Get Started</a>
+    </div>
+</nav>
 
 <div class="page-wrapper">
     <div class="about-hero">

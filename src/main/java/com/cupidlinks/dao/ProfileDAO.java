@@ -8,8 +8,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access class for the profiles table.
+ * It handles profile lookup, discovery filtering, creation, and updates.
+ */
 public class ProfileDAO {
 
+    /**
+     * Finds a profile by its owning user ID.
+     *
+     * @param userId ID of the user whose profile is being loaded
+     * @return matching Profile object, or null when no profile is found
+     * @throws SQLException if the select query fails
+     */
     public Profile findByUserId(int userId) throws SQLException {
         String sql = "SELECT * FROM profiles WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -21,6 +32,17 @@ public class ProfileDAO {
         return null;
     }
 
+    /**
+     * Loads public approved profiles for the discover page using optional filters.
+     *
+     * @param currentUserId ID of the signed-in user to exclude from results
+     * @param gender optional gender filter
+     * @param location optional location search text
+     * @param raasi optional Nepali raasi filter
+     * @param sort selected sort option
+     * @return list of discoverable Profile objects
+     * @throws SQLException if the select query fails
+     */
     public List<Profile> findForDiscover(int currentUserId, String gender, String location, String raasi, String sort) throws SQLException {
         List<Profile> profiles = new ArrayList<>();
 
@@ -47,8 +69,15 @@ public class ProfileDAO {
         return profiles;
     }
 
+    /**
+     * Inserts a new profile with public visibility.
+     *
+     * @param p profile data to insert
+     * @return true if the profile was inserted successfully
+     * @throws SQLException if the insert query fails
+     */
     public boolean insert(Profile p) throws SQLException {
-        String sql = "INSERT INTO profiles (user_id, full_name, date_of_birth, gender, bio, location, dating_preference, nepali_raasi, clan, visibility) VALUES (?,?,?,?,?,?,?,?,?,'public')";
+        String sql = "INSERT INTO profiles (user_id, full_name, date_of_birth, gender, bio, location, dating_preference, profile_photo, nepali_raasi, clan, visibility) VALUES (?,?,?,?,?,?,?,?,?,?,'public')";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, p.getUserId());
@@ -58,14 +87,22 @@ public class ProfileDAO {
             stmt.setString(5, p.getBio());
             stmt.setString(6, p.getLocation());
             stmt.setString(7, p.getDatingPreference());
-            stmt.setString(8, p.getNepaliRaasi());
-            stmt.setString(9, p.getClan());
+            stmt.setString(8, p.getProfilePhoto());
+            stmt.setString(9, p.getNepaliRaasi());
+            stmt.setString(10, p.getClan());
             return stmt.executeUpdate() > 0;
         }
     }
 
+    /**
+     * Updates an existing profile for the owning user.
+     *
+     * @param p profile data containing updated values
+     * @return true if the profile was updated
+     * @throws SQLException if the update query fails
+     */
     public boolean update(Profile p) throws SQLException {
-        String sql = "UPDATE profiles SET full_name=?, date_of_birth=?, gender=?, bio=?, location=?, dating_preference=?, nepali_raasi=?, clan=?, visibility=? WHERE user_id=?";
+        String sql = "UPDATE profiles SET full_name=?, date_of_birth=?, gender=?, bio=?, location=?, dating_preference=?, profile_photo=?, nepali_raasi=?, clan=?, visibility=? WHERE user_id=?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, p.getFullName());
@@ -74,14 +111,22 @@ public class ProfileDAO {
             stmt.setString(4, p.getBio());
             stmt.setString(5, p.getLocation());
             stmt.setString(6, p.getDatingPreference());
-            stmt.setString(7, p.getNepaliRaasi());
-            stmt.setString(8, p.getClan());
-            stmt.setString(9, p.getVisibility());
-            stmt.setInt(10, p.getUserId());
+            stmt.setString(7, p.getProfilePhoto());
+            stmt.setString(8, p.getNepaliRaasi());
+            stmt.setString(9, p.getClan());
+            stmt.setString(10, p.getVisibility());
+            stmt.setInt(11, p.getUserId());
             return stmt.executeUpdate() > 0;
         }
     }
 
+    /**
+     * Converts the current database row into a Profile model object.
+     *
+     * @param rs result set positioned on a profile row
+     * @return populated Profile object
+     * @throws SQLException if reading a column fails
+     */
     private Profile mapRow(ResultSet rs) throws SQLException {
         Profile p = new Profile();
         p.setProfileId(rs.getInt("profile_id"));

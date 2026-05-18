@@ -1,11 +1,13 @@
 package com.cupidlinks.service;
 
 import com.cupidlinks.dao.MatchDAO;
+import com.cupidlinks.dao.ReportDAO;
 import com.cupidlinks.dao.UserDAO;
 import com.cupidlinks.model.User;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service layer for admin dashboard features.
@@ -15,6 +17,7 @@ public class AdminService {
 
     private final UserDAO  userDAO  = new UserDAO();
     private final MatchDAO matchDAO = new MatchDAO();
+    private final ReportDAO reportDAO = new ReportDAO();
 
     /**
      * Loads all normal users for dashboard display.
@@ -100,5 +103,17 @@ public class AdminService {
      */
     public int getTotalMatches() throws SQLException {
         return matchDAO.countAll();
+    }
+
+    public int getTotalReports() throws SQLException {
+        return reportDAO.countAll();
+    }
+
+    public List<Map<String, Object>> getUserRegistrationsByMonth() throws SQLException {
+        return userDAO.countRegistrationsByMonth();
+    }
+
+    public List<Map<String, Object>> getMatchesByMonth() throws SQLException {
+        return matchDAO.countByMonth();
     }
 }

@@ -24,6 +24,7 @@
         </div>
         <nav class="sidebar-nav">
             <a href="${pageContext.request.contextPath}/admin/dashboard" class="nav-item">Dashboard</a>
+            <a href="${pageContext.request.contextPath}/admin/analytics" class="nav-item">Analytics</a>
             <a href="${pageContext.request.contextPath}/admin/reports" class="nav-item">Reports</a>
             <a href="${pageContext.request.contextPath}/admin/support" class="nav-item active">Support</a>
             <a href="${pageContext.request.contextPath}/logout" class="nav-item logout">Logout</a>

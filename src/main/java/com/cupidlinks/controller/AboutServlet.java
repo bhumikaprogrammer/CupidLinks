@@ -9,13 +9,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Controller for displaying the about page.
+ * Controller for displaying the public about page.
  */
 @WebServlet("/about")
 public class AboutServlet extends HttpServlet {
 
     /**
-     * Forwards logged-in users to the shared about JSP page.
+     * Forwards visitors to the public about JSP page.
      *
      * @param request HTTP request from the browser
      * @param response HTTP response used to forward to the JSP

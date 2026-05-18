@@ -24,6 +24,7 @@
         </div>
         <nav class="sidebar-nav">
             <a href="${pageContext.request.contextPath}/admin/dashboard" class="nav-item">Dashboard</a>
+            <a href="${pageContext.request.contextPath}/admin/analytics" class="nav-item">Analytics</a>
             <a href="${pageContext.request.contextPath}/admin/reports" class="nav-item active">Reports</a>
             <a href="${pageContext.request.contextPath}/admin/support" class="nav-item">Support</a>
             <a href="${pageContext.request.contextPath}/logout" class="nav-item logout">Logout</a>
@@ -36,9 +37,17 @@
             <span>Welcome, <strong>${sessionScope.email}</strong></span>
         </div>
 
-        <c:if test="${param.success eq 'true'}">
-            <div class="alert alert-success">Report updated successfully.</div>
-        </c:if>
+        <c:choose>
+            <c:when test="${param.success eq 'reviewed'}">
+                <div class="alert alert-success">Report marked as reviewed.</div>
+            </c:when>
+            <c:when test="${param.success eq 'resolved'}">
+                <div class="alert alert-success">Reported user suspended and report resolved.</div>
+            </c:when>
+            <c:when test="${param.success eq 'dismissed'}">
+                <div class="alert alert-success">Report dismissed because no action was needed.</div>
+            </c:when>
+        </c:choose>
         <c:if test="${param.error eq 'true'}">
             <div class="alert alert-error">Something went wrong. Please try again.</div>
         </c:if>
@@ -78,19 +87,28 @@
                                         <button type="submit" class="btn btn-warning">Mark Reviewed</button>
                                     </form>
                                 </c:if>
-                                <c:if test="${report.status ne 'resolved'}">
+                                <c:if test="${report.status eq 'open' or report.status eq 'reviewed'}">
                                     <form action="${pageContext.request.contextPath}/admin/reports" method="post" style="display:inline">
                                         <input type="hidden" name="reportId" value="${report.reportId}">
                                         <input type="hidden" name="status" value="resolved">
-                                        <button type="submit" class="btn btn-success">Resolve</button>
+                                        <button type="submit" class="btn btn-success"
+                                                onclick="return confirm('Suspend reported user ID ${report.reportedUserId} and resolve this report?')">
+                                            Suspend &amp; Resolve
+                                        </button>
                                     </form>
                                 </c:if>
-                                <c:if test="${report.status ne 'dismissed'}">
+                                <c:if test="${report.status eq 'open' or report.status eq 'reviewed'}">
                                     <form action="${pageContext.request.contextPath}/admin/reports" method="post" style="display:inline">
                                         <input type="hidden" name="reportId" value="${report.reportId}">
                                         <input type="hidden" name="status" value="dismissed">
-                                        <button type="submit" class="btn btn-danger">Dismiss</button>
+                                        <button type="submit" class="btn btn-danger"
+                                                onclick="return confirm('Dismiss this report without action?')">
+                                            Dismiss - No Violation
+                                        </button>
                                     </form>
+                                </c:if>
+                                <c:if test="${report.status eq 'resolved' or report.status eq 'dismissed'}">
+                                    <span class="muted-action">Closed</span>
                                 </c:if>
                             </td>
                         </tr>

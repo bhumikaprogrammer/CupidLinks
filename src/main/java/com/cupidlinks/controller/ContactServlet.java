@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * Controller for the contact and support request page.
+ * Controller for the public contact page and member support requests.
  */
 @WebServlet("/contact")
 public class ContactServlet extends HttpServlet {
@@ -21,7 +21,7 @@ public class ContactServlet extends HttpServlet {
     private final SupportService supportService = new SupportService();
 
     /**
-     * Displays the contact form.
+     * Displays the public contact page.
      *
      * @param request HTTP request from the browser
      * @param response HTTP response used to forward to the contact JSP
@@ -47,6 +47,12 @@ public class ContactServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            request.setAttribute("error", "Please sign in to send account support requests.");
+            request.getRequestDispatcher("/WEB-INF/views/shared/contact.jsp").forward(request, response);
+            return;
+        }
+
         int userId = (int) session.getAttribute("userId");
 
         String subject = ValidationUtil.sanitize(request.getParameter("subject"));

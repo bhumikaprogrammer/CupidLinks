@@ -88,7 +88,7 @@
                         <div class="profile-avatar">
                             <c:choose>
                                 <c:when test="${not empty profile.profilePhoto}">
-                                    <img src="${pageContext.request.contextPath}/uploads/<c:out value='${profile.profilePhoto}'/>" alt="Profile Photo">
+                                    <img src="${pageContext.request.contextPath}/uploads/${profile.profilePhoto}" alt="Profile Photo">
                                 </c:when>
                                 <c:otherwise>
                                     <div class="avatar-placeholder">
@@ -99,6 +99,10 @@
                         </div>
                         <div class="profile-info">
                             <h3><c:out value="${profile.fullName}"/></h3>
+                            <div class="compatibility-pill">
+                                <strong><c:out value="${profile.compatibilityScore}"/>%</strong>
+                                <span>compatible</span>
+                            </div>
                             <c:if test="${not empty profile.location or not empty profile.nepaliRaasi or not empty profile.clan}">
                                 <p class="profile-meta">
                                     <c:if test="${not empty profile.location}"><c:out value="${profile.location}"/> &bull; </c:if>
@@ -123,6 +127,12 @@
                                 <form action="${pageContext.request.contextPath}/favourites" method="post">
                                     <input type="hidden" name="savedUserId" value="${profile.userId}">
                                     <button type="submit" class="btn-fav">Save</button>
+                                </form>
+                                <form action="${pageContext.request.contextPath}/report" method="post" class="report-inline">
+                                    <input type="hidden" name="reportedUserId" value="${profile.userId}">
+                                    <input type="hidden" name="source" value="discover">
+                                    <input type="text" name="reason" placeholder="Reason for report" required>
+                                    <button type="submit">Report</button>
                                 </form>
                             </div>
                         </div>
