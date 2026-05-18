@@ -1,19 +1,36 @@
 package com.cupidlinks.service;
 
-import com.cupidlinks.util.DBConnection;
+import com.cupidlinks.dao.SupportDAO;
+import com.cupidlinks.model.SupportTicket;
 
-import java.sql.*;
+import java.sql.SQLException;
+import java.util.List;
 
+/**
+ * Service layer for support ticket submission.
+ */
 public class SupportService {
 
+    private final SupportDAO supportDAO = new SupportDAO();
+
+    /**
+     * Saves a support ticket submitted by a user.
+     *
+     * @param userId ID of the user submitting the ticket
+     * @param subject ticket subject
+     * @param message ticket message body
+     * @return true if the support ticket was inserted
+     * @throws SQLException if the database insert fails
+     */
     public boolean submitTicket(int userId, String subject, String message) throws SQLException {
-        String sql = "INSERT INTO support_tickets (user_id, subject, message) VALUES (?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, userId);
-            stmt.setString(2, subject);
-            stmt.setString(3, message);
-            return stmt.executeUpdate() > 0;
-        }
+        return supportDAO.insert(userId, subject, message);
+    }
+
+    public List<SupportTicket> getAllTickets() throws SQLException {
+        return supportDAO.findAll();
+    }
+
+    public boolean updateTicketStatus(int ticketId, String status) throws SQLException {
+        return supportDAO.updateStatus(ticketId, status);
     }
 }
